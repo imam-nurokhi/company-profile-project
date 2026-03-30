@@ -99,7 +99,7 @@ export default function Navbar() {
               className="text-2xl font-black tracking-wider"
               style={{ color: "#F1F5F9" }}
             >
-              NEXUS
+              bisadibicarakan.com
             </span>
             <motion.span
               animate={{ scale: [1, 1.3, 1] }}

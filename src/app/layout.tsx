@@ -9,11 +9,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Nexus — Enterprise Technology Solutions",
-    template: "%s | Nexus",
+    default: "bisadibicarakan.com — Enterprise Technology Solutions",
+    template: "%s | bisadibicarakan.com",
   },
   description:
-    "Nexus delivers enterprise-grade web applications, ERP solutions, and digital transformation services. Trusted by 30+ clients with 50+ projects delivered.",
+    "bisadibicarakan.com delivers enterprise-grade web applications, ERP solutions, and digital transformation services. Trusted by 30+ clients with 50+ projects delivered.",
   keywords: [
     "enterprise software development",
     "web application development",
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
     "React development",
     "TypeScript",
   ],
-  authors: [{ name: "Nexus Technologies" }],
-  creator: "Nexus Technologies",
+  authors: [{ name: "bisadibicarakan.com" }],
+  creator: "bisadibicarakan.com",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://nexus.tech",
-    siteName: "Nexus Technologies",
-    title: "Nexus — Enterprise Technology Solutions",
+    siteName: "bisadibicarakan.com",
+    title: "bisadibicarakan.com — Enterprise Technology Solutions",
     description:
       "Architecting scalable digital ecosystems for forward-thinking enterprises.",
     images: [
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Nexus Technologies",
+        alt: "bisadibicarakan.com",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus — Enterprise Technology Solutions",
+    title: "bisadibicarakan.com — Enterprise Technology Solutions",
     description:
       "Architecting scalable digital ecosystems for forward-thinking enterprises.",
     images: ["/og-image.png"],

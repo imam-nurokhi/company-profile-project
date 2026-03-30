@@ -62,7 +62,7 @@ const projects = [
 const testimonials = [
   {
     quote:
-      "Nexus transformed our legacy infrastructure into a modern, cloud-native platform. Delivery was on time, on budget, and the quality exceeded every benchmark we set.",
+      "bisadibicarakan.com transformed our legacy infrastructure into a modern, cloud-native platform. Delivery was on time, on budget, and the quality exceeded every benchmark we set.",
     name: "Sarah Chen",
     role: "CTO",
     company: "FinTechPro",
@@ -78,7 +78,7 @@ const testimonials = [
   },
   {
     quote:
-      "Working with Nexus felt like having a senior engineering team embedded inside our company. Their architecture audit identified risks we didn't even know existed.",
+      "Working with bisadibicarakan.com felt like having a senior engineering team embedded inside our company. Their architecture audit identified risks we didn't even know existed.",
     name: "Mark Lewinski",
     role: "VP Engineering",
     company: "DataSphere Inc.",

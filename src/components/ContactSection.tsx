@@ -350,7 +350,7 @@ export default function ContactSection() {
           >
             <div>
               <h3 className="text-2xl font-bold mb-3" style={{ color: "#F1F5F9" }}>
-                Why partner with Nexus?
+                Why partner with bisadibicarakan.com?
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
                 We don&apos;t just write code — we become a strategic extension

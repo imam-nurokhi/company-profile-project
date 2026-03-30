@@ -75,7 +75,7 @@ export default function Footer() {
                 className="text-2xl font-black tracking-wider"
                 style={{ color: "#F1F5F9" }}
               >
-                NEXUS
+                bisadibicarakan.com
               </span>
               <motion.span
                 animate={{ scale: [1, 1.3, 1] }}
@@ -158,7 +158,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs" style={{ color: "#475569" }}>
-            © {currentYear} Nexus Technologies, Inc. All rights reserved.
+            © {currentYear} bisadibicarakan.com. All rights reserved.
           </p>
           <p className="text-xs flex items-center gap-1" style={{ color: "#475569" }}>
             Made with{" "}
@@ -169,7 +169,7 @@ export default function Footer() {
             >
               ♥
             </motion.span>{" "}
-            by the Nexus team
+            by the bisadibicarakan.com team
           </p>
         </div>
       </div>
