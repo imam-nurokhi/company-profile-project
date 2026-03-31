@@ -225,7 +225,6 @@ export default function ContactSection() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-    setError,
   } = useForm<FormData>({
     resolver: zodResolver(
       z.object({
@@ -255,9 +254,6 @@ export default function ContactSection() {
       estimatedBudget: undefined,
     },
   });
-
-  // suppress unused variable warning
-  void setError;
 
   const watchedValues = watch();
 
