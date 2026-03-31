@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 
@@ -78,7 +79,10 @@ export default function RootLayout({
         className="min-h-screen antialiased"
         style={{ backgroundColor: "#0A0F1E", color: "#F1F5F9" }}
       >
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
