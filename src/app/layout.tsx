@@ -79,7 +79,9 @@ export default function RootLayout({
         className="min-h-screen antialiased"
         style={{ backgroundColor: "#0A0F1E", color: "#F1F5F9" }}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

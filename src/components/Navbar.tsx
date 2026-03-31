@@ -5,8 +5,38 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import type { Language } from "@/i18n/translations";
 
+function LanguageToggle() {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div
+      className="flex items-center rounded-full overflow-hidden"
+      style={{
+        border: "1px solid rgba(0,212,255,0.3)",
+        backgroundColor: "rgba(10,15,30,0.8)",
+      }}
+    >
+      {(["id", "en"] as Language[]).map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          className="px-3 py-1.5 text-xs font-bold uppercase transition-all duration-200"
+          style={{
+            background:
+              lang === l
+                ? "linear-gradient(135deg, #00D4FF 0%, #10B981 100%)"
+                : "transparent",
+            color: lang === l ? "#0A0F1E" : "#64748B",
+          }}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Navbar() {
-  const { lang, setLang, t } = useLanguage();
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
@@ -52,33 +82,6 @@ export default function Navbar() {
       transition: { duration: 0.12, ease: "easeIn" },
     },
   };
-
-  const LanguageToggle = () => (
-    <div
-      className="flex items-center rounded-full overflow-hidden"
-      style={{
-        border: "1px solid rgba(0,212,255,0.3)",
-        backgroundColor: "rgba(10,15,30,0.8)",
-      }}
-    >
-      {(["id", "en"] as Language[]).map((l) => (
-        <button
-          key={l}
-          onClick={() => setLang(l)}
-          className="px-3 py-1.5 text-xs font-bold uppercase transition-all duration-200"
-          style={{
-            background:
-              lang === l
-                ? "linear-gradient(135deg, #00D4FF 0%, #10B981 100%)"
-                : "transparent",
-            color: lang === l ? "#0A0F1E" : "#64748B",
-          }}
-        >
-          {l.toUpperCase()}
-        </button>
-      ))}
-    </div>
-  );
 
   return (
     <motion.nav
