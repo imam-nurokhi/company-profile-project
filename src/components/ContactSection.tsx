@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 const schema = z.object({
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  company: z.string().min(2, "Company name must be at least 2 characters"),
+  fullName: z.string().min(2),
+  email: z.string().email(),
+  company: z.string().min(2),
   projectInterest: z.enum(
     [
       "Web Application",
@@ -29,29 +30,6 @@ const schema = z.object({
 });
 
 type FormData = z.infer<typeof schema>;
-
-const valueProps = [
-  {
-    icon: "⚡",
-    title: "Fast Turnaround",
-    description: "MVP in 6–12 weeks with agile delivery",
-  },
-  {
-    icon: "🔒",
-    title: "NDA Protected",
-    description: "Your IP stays yours, always",
-  },
-  {
-    icon: "🏆",
-    title: "Dedicated Team",
-    description: "Senior engineers assigned to your project",
-  },
-  {
-    icon: "📊",
-    title: "Transparent Pricing",
-    description: "No surprises — fixed or T&M contracts",
-  },
-];
 
 function FloatingInput({
   id,
@@ -98,8 +76,7 @@ function FloatingInput({
           transform: focused || hasValue ? "translateY(0) scale(0.8)" : "translateY(-50%)",
           transformOrigin: "left",
           fontSize: focused || hasValue ? "10px" : "14px",
-          color:
-            error ? "#EF4444" : focused ? "#00D4FF" : "#64748B",
+          color: error ? "#EF4444" : focused ? "#00D4FF" : "#64748B",
           fontWeight: "600",
           letterSpacing: "0.05em",
           textTransform: "uppercase",
@@ -161,8 +138,7 @@ function FloatingSelect({
           transform: focused || hasValue ? "translateY(0) scale(0.8)" : "translateY(-50%)",
           transformOrigin: "left",
           fontSize: focused || hasValue ? "10px" : "14px",
-          color:
-            error ? "#EF4444" : focused ? "#00D4FF" : "#64748B",
+          color: error ? "#EF4444" : focused ? "#00D4FF" : "#64748B",
           fontWeight: "600",
           letterSpacing: "0.05em",
           textTransform: "uppercase",
@@ -194,7 +170,7 @@ function FloatingSelect({
   );
 }
 
-function SuccessState() {
+function SuccessState({ title, message }: { title: string; message: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -229,11 +205,10 @@ function SuccessState() {
 
       <div className="text-center">
         <h3 className="text-2xl font-bold mb-2" style={{ color: "#F1F5F9" }}>
-          Proposal Request Sent!
+          {title}
         </h3>
         <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
-          Thank you for reaching out. A member of our team will review your
-          requirements and get back to you within 1 business day.
+          {message}
         </p>
       </div>
     </motion.div>
@@ -242,6 +217,8 @@ function SuccessState() {
 
 export default function ContactSection() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { t } = useLanguage();
+  const ct = t.contact;
 
   const {
     register,
@@ -249,7 +226,29 @@ export default function ContactSection() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(
+      z.object({
+        fullName: z.string().min(2, ct.validation.fullNameMin),
+        email: z.string().email(ct.validation.emailInvalid),
+        company: z.string().min(2, ct.validation.companyMin),
+        projectInterest: z.enum(
+          [
+            "Web Application",
+            "ERP Implementation",
+            "System Architecture",
+            "UI/UX Design",
+            "IT Audit",
+            "Other",
+          ],
+          { error: ct.validation.projectRequired }
+        ),
+        estimatedBudget: z.enum(
+          ["Under $10k", "$10k-$50k", "$50k-$100k", "$100k+"],
+          { error: ct.validation.budgetRequired }
+        ),
+        description: z.string().optional(),
+      })
+    ),
     defaultValues: {
       projectInterest: undefined,
       estimatedBudget: undefined,
@@ -259,7 +258,6 @@ export default function ContactSection() {
   const watchedValues = watch();
 
   const onSubmit = async (data: FormData) => {
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log("Form submitted:", data);
     setIsSubmitted(true);
@@ -304,7 +302,7 @@ export default function ContactSection() {
               className="text-xs font-semibold uppercase tracking-widest"
               style={{ color: "#00D4FF" }}
             >
-              Get In Touch
+              {ct.sectionLabel}
             </span>
             <div
               className="h-px w-8"
@@ -322,8 +320,8 @@ export default function ContactSection() {
             className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4"
             style={{ color: "#F1F5F9" }}
           >
-            Request a{" "}
-            <span className="gradient-text">Proposal</span>
+            {ct.heading1}{" "}
+            <span className="gradient-text">{ct.heading2}</span>
           </motion.h2>
 
           <motion.p
@@ -334,8 +332,7 @@ export default function ContactSection() {
             className="text-lg max-w-xl mx-auto"
             style={{ color: "#94A3B8" }}
           >
-            Tell us about your project and we&apos;ll put together a custom
-            proposal within 24 hours.
+            {ct.subheading}
           </motion.p>
         </div>
 
@@ -350,17 +347,15 @@ export default function ContactSection() {
           >
             <div>
               <h3 className="text-2xl font-bold mb-3" style={{ color: "#F1F5F9" }}>
-                Why partner with bisadibicarakan.com?
+                {ct.whyTitle}
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
-                We don&apos;t just write code — we become a strategic extension
-                of your team. Every engagement starts with deep discovery to
-                ensure we&apos;re solving the right problems.
+                {ct.whyDescription}
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {valueProps.map((vp, i) => (
+              {ct.valueProps.map((vp, i) => (
                 <motion.div
                   key={vp.title}
                   initial={{ opacity: 0, y: 20 }}
@@ -420,7 +415,11 @@ export default function ContactSection() {
           >
             <AnimatePresence mode="wait">
               {isSubmitted ? (
-                <SuccessState key="success" />
+                <SuccessState
+                  key="success"
+                  title={ct.successTitle}
+                  message={ct.successMessage}
+                />
               ) : (
                 <motion.form
                   key="form"
@@ -432,14 +431,14 @@ export default function ContactSection() {
                 >
                   <FloatingInput
                     id="fullName"
-                    label="Full Name"
+                    label={ct.fields.fullName}
                     error={errors.fullName?.message}
                     value={watchedValues.fullName ?? ""}
                     {...register("fullName")}
                   />
                   <FloatingInput
                     id="email"
-                    label="Email Address"
+                    label={ct.fields.email}
                     type="email"
                     error={errors.email?.message}
                     value={watchedValues.email ?? ""}
@@ -447,7 +446,7 @@ export default function ContactSection() {
                   />
                   <FloatingInput
                     id="company"
-                    label="Company Name"
+                    label={ct.fields.company}
                     error={errors.company?.message}
                     value={watchedValues.company ?? ""}
                     {...register("company")}
@@ -455,7 +454,7 @@ export default function ContactSection() {
 
                   <FloatingSelect
                     id="projectInterest"
-                    label="Project Interest"
+                    label={ct.fields.projectInterest}
                     error={errors.projectInterest?.message}
                     value={watchedValues.projectInterest ?? ""}
                     {...register("projectInterest")}
@@ -463,27 +462,20 @@ export default function ContactSection() {
                     <option value="" disabled hidden>
                       Select...
                     </option>
-                    {[
-                      "Web Application",
-                      "ERP Implementation",
-                      "System Architecture",
-                      "UI/UX Design",
-                      "IT Audit",
-                      "Other",
-                    ].map((opt) => (
+                    {ct.projectOptions.map((opt) => (
                       <option
-                        key={opt}
-                        value={opt}
+                        key={opt.value}
+                        value={opt.value}
                         style={{ backgroundColor: "#1E2A3B" }}
                       >
-                        {opt}
+                        {opt.label}
                       </option>
                     ))}
                   </FloatingSelect>
 
                   <FloatingSelect
                     id="estimatedBudget"
-                    label="Estimated Budget"
+                    label={ct.fields.estimatedBudget}
                     error={errors.estimatedBudget?.message}
                     value={watchedValues.estimatedBudget ?? ""}
                     {...register("estimatedBudget")}
@@ -491,17 +483,15 @@ export default function ContactSection() {
                     <option value="" disabled hidden>
                       Select...
                     </option>
-                    {["Under $10k", "$10k-$50k", "$50k-$100k", "$100k+"].map(
-                      (opt) => (
-                        <option
-                          key={opt}
-                          value={opt}
-                          style={{ backgroundColor: "#1E2A3B" }}
-                        >
-                          {opt}
-                        </option>
-                      )
-                    )}
+                    {ct.budgetOptions.map((opt) => (
+                      <option
+                        key={opt.value}
+                        value={opt.value}
+                        style={{ backgroundColor: "#1E2A3B" }}
+                      >
+                        {opt.label}
+                      </option>
+                    ))}
                   </FloatingSelect>
 
                   {/* Textarea */}
@@ -540,7 +530,7 @@ export default function ContactSection() {
                       className="absolute left-4 top-3 text-xs font-semibold uppercase tracking-wider pointer-events-none"
                       style={{ color: "#64748B" }}
                     >
-                      Project Description (optional)
+                      {ct.fields.description}
                     </label>
                   </div>
 
@@ -574,10 +564,10 @@ export default function ContactSection() {
                           className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full"
                           style={{ borderColor: "#0A0F1E" }}
                         />
-                        Sending...
+                        {ct.submitting}
                       </>
                     ) : (
-                      "Submit Proposal Request →"
+                      ct.submitButton
                     )}
                   </motion.button>
                 </motion.form>

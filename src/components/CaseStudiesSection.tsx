@@ -2,114 +2,22 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
-const clientLogos = [
-  "FinTechPro",
-  "AquaLogic",
-  "NovaMed",
-  "SkyBuild",
-  "DataSphere",
-  "ClearOps",
-  "UrbanFlow",
-  "GridCore",
-  "PeakSync",
-  "HorizonAI",
-];
-
-const projects = [
-  {
-    id: 1,
-    name: "FinTechPro Banking Platform",
-    description:
-      "End-to-end digital banking platform handling 2M+ daily transactions with real-time fraud detection and multi-currency support.",
-    tags: ["React", "Node.js", "PostgreSQL", "Redis", "AWS"],
-    accent: "#00D4FF",
-    gradient: "from-[#0A0F1E] via-[#00D4FF]/20 to-[#10B981]/20",
-    size: "large",
-  },
-  {
-    id: 2,
-    name: "NovaMed ERP System",
-    description:
-      "Unified ERP for a 500-bed hospital chain covering patient management, pharmacy, billing, and compliance reporting.",
-    tags: ["Next.js", "TypeScript", "MySQL", "Docker"],
-    accent: "#10B981",
-    gradient: "from-[#0A0F1E] via-[#10B981]/20 to-[#8B5CF6]/20",
-    size: "small",
-  },
-  {
-    id: 3,
-    name: "SkyBuild Construction Suite",
-    description:
-      "Project management and supply-chain platform for a $2B construction firm, integrating on-site IoT sensors.",
-    tags: ["Vue.js", "Python", "GraphQL", "Kubernetes"],
-    accent: "#8B5CF6",
-    gradient: "from-[#0A0F1E] via-[#8B5CF6]/20 to-[#F59E0B]/15",
-    size: "small",
-  },
-  {
-    id: 4,
-    name: "DataSphere Analytics Dashboard",
-    description:
-      "Real-time business intelligence dashboard processing 50GB daily data streams with predictive analytics.",
-    tags: ["React", "D3.js", "Apache Kafka", "ClickHouse"],
-    accent: "#F59E0B",
-    gradient: "from-[#0A0F1E] via-[#F59E0B]/20 to-[#00D4FF]/15",
-    size: "large",
-  },
-];
-
-const testimonials = [
-  {
-    quote:
-      "bisadibicarakan.com transformed our legacy infrastructure into a modern, cloud-native platform. Delivery was on time, on budget, and the quality exceeded every benchmark we set.",
-    name: "Sarah Chen",
-    role: "CTO",
-    company: "FinTechPro",
-    stars: 5,
-  },
-  {
-    quote:
-      "The ERP system they built for us reduced operational overhead by 40% in the first quarter. The team's domain knowledge in healthcare workflows is unmatched.",
-    name: "Dr. James Okafor",
-    role: "Director of Operations",
-    company: "NovaMed Group",
-    stars: 5,
-  },
-  {
-    quote:
-      "Working with bisadibicarakan.com felt like having a senior engineering team embedded inside our company. Their architecture audit identified risks we didn't even know existed.",
-    name: "Mark Lewinski",
-    role: "VP Engineering",
-    company: "DataSphere Inc.",
-    stars: 5,
-  },
-  {
-    quote:
-      "From first call to go-live was 12 weeks. The UI/UX work alone generated a 28% improvement in user retention. Absolutely world-class output.",
-    name: "Priya Mehta",
-    role: "Product Lead",
-    company: "ClearOps",
-    stars: 5,
-  },
-];
-
-function LogoMarquee() {
-  const doubled = [...clientLogos, ...clientLogos];
+function LogoMarquee({ logos }: { logos: readonly string[] }) {
+  const doubled = [...logos, ...logos];
   return (
     <div className="overflow-hidden py-8 relative">
       <div
         className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
         style={{
-          background:
-            "linear-gradient(to right, #0A0F1E, transparent)",
+          background: "linear-gradient(to right, #0A0F1E, transparent)",
         }}
       />
       <div
         className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
         style={{
-          background:
-            "linear-gradient(to left, #0A0F1E, transparent)",
+          background: "linear-gradient(to left, #0A0F1E, transparent)",
         }}
       />
       <div className="flex animate-marquee whitespace-nowrap">
@@ -132,17 +40,35 @@ function LogoMarquee() {
   );
 }
 
-function BentoGrid() {
+type ProjectItem = {
+  id: number;
+  name: string;
+  description: string;
+  tags: readonly string[];
+  accent: string;
+  gradient: string;
+  size: string;
+};
+
+function BentoGrid({
+  projects,
+  viewCaseStudy,
+}: {
+  projects: readonly ProjectItem[];
+  viewCaseStudy: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
     <div
       ref={ref}
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-auto"
+      /* dense: fills gaps left by span-2 cards; DOM order is preserved so screen readers are unaffected */
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-auto [grid-auto-flow:dense]"
     >
       {projects.map((project, i) => {
         const isLarge = project.size === "large";
+        const isWide = project.size === "wide";
         return (
           <motion.div
             key={project.id}
@@ -151,9 +77,9 @@ function BentoGrid() {
             transition={{ duration: 0.5, delay: i * 0.1 }}
             className={`relative rounded-2xl overflow-hidden group cursor-pointer ${
               isLarge ? "lg:col-span-2" : ""
-            }`}
+            } ${isWide ? "lg:col-span-3" : ""}`}
             style={{
-              minHeight: isLarge ? "260px" : "220px",
+              minHeight: isLarge || isWide ? "260px" : "220px",
               border: "1px solid rgba(255,255,255,0.06)",
             }}
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
@@ -209,7 +135,7 @@ function BentoGrid() {
                   className="inline-flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   style={{ color: project.accent }}
                 >
-                  View Case Study
+                  {viewCaseStudy}
                   <motion.span
                     animate={{ x: [0, 4, 0] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}
@@ -234,7 +160,23 @@ function BentoGrid() {
   );
 }
 
-function TestimonialCarousel() {
+type TestimonialItem = {
+  quote: string;
+  name: string;
+  role: string;
+  company: string;
+  stars: number;
+};
+
+function TestimonialCarousel({
+  testimonials,
+  title1,
+  title2,
+}: {
+  testimonials: readonly TestimonialItem[];
+  title1: string;
+  title2: string;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -242,7 +184,7 @@ function TestimonialCarousel() {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [testimonials.length]);
 
   const current = testimonials[activeIndex];
 
@@ -255,7 +197,7 @@ function TestimonialCarousel() {
         className="text-center text-2xl font-bold mb-10"
         style={{ color: "#F1F5F9" }}
       >
-        What Our <span className="gradient-text">Clients Say</span>
+        {title1} <span className="gradient-text">{title2}</span>
       </motion.h3>
 
       <div
@@ -298,8 +240,7 @@ function TestimonialCarousel() {
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold"
                 style={{
-                  background:
-                    "linear-gradient(135deg, #00D4FF20, #10B98120)",
+                  background: "linear-gradient(135deg, #00D4FF20, #10B98120)",
                   border: "1px solid rgba(0,212,255,0.3)",
                   color: "#00D4FF",
                 }}
@@ -329,9 +270,7 @@ function TestimonialCarousel() {
                 width: i === activeIndex ? "24px" : "8px",
                 height: "8px",
                 backgroundColor:
-                  i === activeIndex
-                    ? "#00D4FF"
-                    : "rgba(255,255,255,0.2)",
+                  i === activeIndex ? "#00D4FF" : "rgba(255,255,255,0.2)",
               }}
             />
           ))}
@@ -342,6 +281,8 @@ function TestimonialCarousel() {
 }
 
 export default function CaseStudiesSection() {
+  const { t } = useLanguage();
+
   return (
     <section
       id="case-studies"
@@ -367,7 +308,7 @@ export default function CaseStudiesSection() {
               className="text-xs font-semibold uppercase tracking-widest"
               style={{ color: "#00D4FF" }}
             >
-              Trust & Case Studies
+              {t.projects.sectionLabel}
             </span>
             <div
               className="h-px w-8"
@@ -385,21 +326,28 @@ export default function CaseStudiesSection() {
             className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4"
             style={{ color: "#F1F5F9" }}
           >
-            Proven at{" "}
-            <span className="gradient-text">Scale</span>
+            {t.projects.heading1}{" "}
+            <span className="gradient-text">{t.projects.heading2}</span>
           </motion.h2>
         </div>
 
         {/* Client logo marquee */}
-        <LogoMarquee />
+        <LogoMarquee logos={t.projects.clientLogos} />
 
         {/* Bento grid */}
         <div className="mt-12">
-          <BentoGrid />
+          <BentoGrid
+            projects={t.projects.items}
+            viewCaseStudy={t.projects.viewCaseStudy}
+          />
         </div>
 
         {/* Testimonials */}
-        <TestimonialCarousel />
+        <TestimonialCarousel
+          testimonials={t.projects.testimonials}
+          title1={t.projects.testimonialsTitle1}
+          title2={t.projects.testimonialsTitle2}
+        />
       </div>
     </section>
   );
