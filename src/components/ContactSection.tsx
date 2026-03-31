@@ -389,9 +389,9 @@ export default function ContactSection() {
             {/* Contact info */}
             <div className="flex flex-col gap-3">
               {[
-                { icon: "📧", text: "hello@nexus.tech" },
-                { icon: "📞", text: "+1 (555) 000-0000" },
-                { icon: "📍", text: "San Francisco, CA • Remote-first" },
+                { icon: "📧", text: "info@bisadibicarakan.com" },
+                { icon: "📞", text: "+62 812-9886-4255" },
+                { icon: "📍", text: "South Jakarta, Indonesia" },
               ].map((item) => (
                 <div
                   key={item.text}
