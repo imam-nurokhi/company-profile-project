@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -78,6 +79,7 @@ export default function RootLayout({
         style={{ backgroundColor: "#0A0F1E", color: "#F1F5F9" }}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
