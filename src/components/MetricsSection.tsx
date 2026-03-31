@@ -2,48 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
-const metrics = [
-  {
-    value: 50,
-    suffix: "+",
-    label: "Projects Delivered",
-    description: "Enterprise solutions shipped across 10+ industries",
-    icon: "🚀",
-    accent: "#00D4FF",
-  },
-  {
-    value: 99.9,
-    suffix: "%",
-    label: "Uptime SLA",
-    description: "Mission-critical reliability, guaranteed",
-    icon: "⚡",
-    accent: "#10B981",
-  },
-  {
-    value: 30,
-    suffix: "+",
-    label: "Happy Clients",
-    description: "Long-term partnerships built on trust",
-    icon: "🤝",
-    accent: "#8B5CF6",
-  },
-  {
-    value: 5,
-    suffix: " Yrs",
-    label: "Experience",
-    description: "Deep domain expertise across enterprise tech",
-    icon: "🏆",
-    accent: "#F59E0B",
-  },
-  {
-    value: 24,
-    suffix: "/7",
-    label: "Support",
-    description: "Always-on monitoring and rapid response",
-    icon: "🛡️",
-    accent: "#EF4444",
-  },
+const metricsData = [
+  { value: 50, suffix: "+", accent: "#00D4FF", icon: "🚀" },
+  { value: 99.9, suffix: "%", accent: "#10B981", icon: "⚡" },
+  { value: 30, suffix: "+", accent: "#8B5CF6", icon: "🤝" },
+  { value: 5, suffix: " Yrs", accent: "#F59E0B", icon: "🏆" },
+  { value: 24, suffix: "/7", accent: "#EF4444", icon: "🛡️" },
 ];
 
 function AnimatedCounter({
@@ -70,7 +36,6 @@ function AnimatedCounter({
       if (startRef.current === null) startRef.current = timestamp;
       const elapsed = timestamp - startRef.current;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(parseFloat((eased * value).toFixed(value % 1 !== 0 ? 1 : 0)));
       if (progress < 1) {
@@ -96,11 +61,21 @@ function AnimatedCounter({
 }
 
 function MetricCard({
-  metric,
+  value,
+  suffix,
+  accent,
+  icon,
+  label,
+  description,
   index,
   isInView,
 }: {
-  metric: (typeof metrics)[0];
+  value: number;
+  suffix: string;
+  accent: string;
+  icon: string;
+  label: string;
+  description: string;
   index: number;
   isInView: boolean;
 }) {
@@ -116,8 +91,8 @@ function MetricCard({
       }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.border = `1px solid ${metric.accent}35`;
-        (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 40px ${metric.accent}18`;
+        (e.currentTarget as HTMLElement).style.border = `1px solid ${accent}35`;
+        (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 40px ${accent}18`;
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.border =
@@ -128,32 +103,32 @@ function MetricCard({
       {/* Background glow */}
       <div
         className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl pointer-events-none"
-        style={{ backgroundColor: `${metric.accent}12` }}
+        style={{ backgroundColor: `${accent}12` }}
       />
 
       {/* Icon */}
       <div
         className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-        style={{ backgroundColor: `${metric.accent}15` }}
+        style={{ backgroundColor: `${accent}15` }}
       >
-        {metric.icon}
+        {icon}
       </div>
 
       {/* Counter */}
       <AnimatedCounter
-        value={metric.value}
-        suffix={metric.suffix}
-        accent={metric.accent}
+        value={value}
+        suffix={suffix}
+        accent={accent}
         isInView={isInView}
       />
 
       {/* Label & description */}
       <div>
         <p className="font-bold text-base" style={{ color: "#F1F5F9" }}>
-          {metric.label}
+          {label}
         </p>
         <p className="text-sm mt-0.5" style={{ color: "#64748B" }}>
-          {metric.description}
+          {description}
         </p>
       </div>
 
@@ -161,7 +136,7 @@ function MetricCard({
       <div
         className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500"
         style={{
-          background: `linear-gradient(90deg, ${metric.accent}, transparent)`,
+          background: `linear-gradient(90deg, ${accent}, transparent)`,
         }}
       />
     </motion.div>
@@ -171,6 +146,7 @@ function MetricCard({
 export default function MetricsSection() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const { t } = useLanguage();
 
   return (
     <section
@@ -221,7 +197,7 @@ export default function MetricsSection() {
               className="text-xs font-semibold uppercase tracking-widest"
               style={{ color: "#00D4FF" }}
             >
-              By the Numbers
+              {t.metrics.sectionLabel}
             </span>
             <div
               className="h-px w-8"
@@ -238,17 +214,22 @@ export default function MetricsSection() {
             className="text-3xl sm:text-4xl lg:text-5xl font-black"
             style={{ color: "#F1F5F9" }}
           >
-            Results That{" "}
-            <span className="gradient-text">Speak</span>
+            {t.metrics.heading1}{" "}
+            <span className="gradient-text">{t.metrics.heading2}</span>
           </motion.h2>
         </div>
 
         {/* Metrics grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {metrics.map((metric, i) => (
+          {metricsData.map((m, i) => (
             <MetricCard
-              key={metric.label}
-              metric={metric}
+              key={i}
+              value={m.value}
+              suffix={m.suffix}
+              accent={m.accent}
+              icon={m.icon}
+              label={t.metrics.items[i].label}
+              description={t.metrics.items[i].description}
               index={i}
               isInView={isInView}
             />

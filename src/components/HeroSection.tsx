@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, type Variants } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Node {
   x: number;
@@ -104,15 +105,11 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-const trustItems = [
-  { value: "50+", label: "Projects" },
-  { value: "99.9%", label: "Uptime" },
-  { value: "5★", label: "Reviews" },
-];
-
 export default function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useNetworkCanvas(canvasRef);
+  const { t } = useLanguage();
+  const trustItems = t.hero.trustItems;
 
   return (
     <section
@@ -171,7 +168,7 @@ export default function HeroSection() {
                 className="w-1.5 h-1.5 rounded-full animate-pulse"
                 style={{ backgroundColor: "#00D4FF" }}
               />
-              Enterprise-Grade Technology Solutions
+              {t.hero.badge}
             </span>
           </motion.div>
 
@@ -181,9 +178,9 @@ export default function HeroSection() {
             className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight tracking-tight"
             style={{ maxWidth: "900px" }}
           >
-            <span className="gradient-text-hero">Architecting Scalable</span>
+            <span className="gradient-text-hero">{t.hero.headline1}</span>
             <br />
-            <span style={{ color: "#F1F5F9" }}>Digital Ecosystems</span>
+            <span style={{ color: "#F1F5F9" }}>{t.hero.headline2}</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -192,9 +189,7 @@ export default function HeroSection() {
             className="text-lg sm:text-xl leading-relaxed max-w-2xl"
             style={{ color: "#94A3B8" }}
           >
-            We partner with forward-thinking enterprises to build robust,
-            high-performance digital platforms — from custom web applications
-            and ERP systems to end-to-end architecture audits.
+            {t.hero.subheadline}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -214,7 +209,7 @@ export default function HeroSection() {
                 boxShadow: "0 4px 20px rgba(0,212,255,0.25)",
               }}
             >
-              Start Your Project
+              {t.hero.ctaPrimary}
             </motion.a>
             <motion.a
               href="#case-studies"
@@ -227,7 +222,7 @@ export default function HeroSection() {
                 backgroundColor: "transparent",
               }}
             >
-              View Our Work
+              {t.hero.ctaSecondary}
             </motion.a>
           </motion.div>
 
@@ -236,16 +231,16 @@ export default function HeroSection() {
             variants={item}
             className="flex items-center gap-6 sm:gap-10 mt-4"
           >
-            {trustItems.map((t, i) => (
+            {trustItems.map((ti, i) => (
               <div key={i} className="flex flex-col items-center">
                 <span
                   className="text-2xl sm:text-3xl font-black"
                   style={{ color: "#00D4FF" }}
                 >
-                  {t.value}
+                  {ti.value}
                 </span>
                 <span className="text-xs font-medium mt-0.5" style={{ color: "#64748B" }}>
-                  {t.label}
+                  {ti.label}
                 </span>
               </div>
             ))}
@@ -261,7 +256,7 @@ export default function HeroSection() {
         transition={{ delay: 1.5 }}
       >
         <span className="text-xs font-medium" style={{ color: "#64748B" }}>
-          Scroll
+          {t.hero.scrollLabel}
         </span>
         <motion.div
           animate={{ y: [0, 8, 0] }}

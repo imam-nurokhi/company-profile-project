@@ -2,31 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-
-const solutions = [
-  {
-    label: "Web App Development",
-    description: "Scalable, performant web applications",
-    icon: "⚡",
-  },
-  {
-    label: "ERP Solutions",
-    description: "End-to-end enterprise resource planning",
-    icon: "🏗️",
-  },
-  {
-    label: "System Architecture",
-    description: "Future-proof infrastructure design",
-    icon: "🔧",
-  },
-  {
-    label: "UI/UX Design",
-    description: "Human-centred digital experiences",
-    icon: "🎨",
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
+import type { Language } from "@/i18n/translations";
 
 export default function Navbar() {
+  const { lang, setLang, t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
@@ -72,6 +52,33 @@ export default function Navbar() {
       transition: { duration: 0.12, ease: "easeIn" },
     },
   };
+
+  const LanguageToggle = () => (
+    <div
+      className="flex items-center rounded-full overflow-hidden"
+      style={{
+        border: "1px solid rgba(0,212,255,0.3)",
+        backgroundColor: "rgba(10,15,30,0.8)",
+      }}
+    >
+      {(["id", "en"] as Language[]).map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          className="px-3 py-1.5 text-xs font-bold uppercase transition-all duration-200"
+          style={{
+            background:
+              lang === l
+                ? "linear-gradient(135deg, #00D4FF 0%, #10B981 100%)"
+                : "transparent",
+            color: lang === l ? "#0A0F1E" : "#64748B",
+          }}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <motion.nav
@@ -120,7 +127,7 @@ export default function Navbar() {
                 onMouseLeave={() => setSolutionsOpen(false)}
                 onClick={() => setSolutionsOpen((v) => !v)}
               >
-                Solutions
+                {t.navbar.solutions}
                 <motion.svg
                   animate={{ rotate: solutionsOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
@@ -153,7 +160,7 @@ export default function Navbar() {
                     onMouseEnter={() => setSolutionsOpen(true)}
                     onMouseLeave={() => setSolutionsOpen(false)}
                   >
-                    {solutions.map((item) => (
+                    {t.navbar.solutionsItems.map((item) => (
                       <a
                         key={item.label}
                         href="#services"
@@ -198,7 +205,7 @@ export default function Navbar() {
                 onMouseLeave={() => setCompanyOpen(false)}
                 onClick={() => setCompanyOpen((v) => !v)}
               >
-                Company
+                {t.navbar.company}
                 <motion.svg
                   animate={{ rotate: companyOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
@@ -231,7 +238,7 @@ export default function Navbar() {
                     onMouseEnter={() => setCompanyOpen(true)}
                     onMouseLeave={() => setCompanyOpen(false)}
                   >
-                    {["About Us", "Careers", "Blog"].map((item) => (
+                    {t.navbar.companyItems.map((item) => (
                       <a
                         key={item}
                         href="#"
@@ -269,12 +276,13 @@ export default function Navbar() {
                 ((e.currentTarget as HTMLElement).style.color = "#94A3B8")
               }
             >
-              Resources
+              {t.navbar.resources}
             </a>
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex items-center">
+          {/* Language toggle + CTA Button */}
+          <div className="hidden lg:flex items-center gap-3">
+            <LanguageToggle />
             <motion.a
               href="#contact"
               whileHover={{ scale: 1.04 }}
@@ -286,7 +294,7 @@ export default function Navbar() {
                 boxShadow: "0 4px 20px rgba(0, 212, 255, 0.25)",
               }}
             >
-              Get a Consultation
+              {t.navbar.cta}
             </motion.a>
           </div>
 
@@ -336,9 +344,9 @@ export default function Navbar() {
                 className="text-xs font-semibold uppercase tracking-wider px-4 pb-2"
                 style={{ color: "#64748B" }}
               >
-                Solutions
+                {t.navbar.solutions}
               </p>
-              {solutions.map((item) => (
+              {t.navbar.solutionsItems.map((item) => (
                 <a
                   key={item.label}
                   href="#services"
@@ -356,7 +364,7 @@ export default function Navbar() {
                   borderTop: "1px solid rgba(255,255,255,0.07)",
                 }}
               />
-              {["About Us", "Careers", "Blog", "Resources"].map((item) => (
+              {[...t.navbar.companyItems, t.navbar.resources].map((item) => (
                 <a
                   key={item}
                   href="#"
@@ -378,8 +386,11 @@ export default function Navbar() {
                     color: "#0A0F1E",
                   }}
                 >
-                  Get a Consultation
+                  {t.navbar.cta}
                 </a>
+              </div>
+              <div className="pt-3 flex justify-center">
+                <LanguageToggle />
               </div>
             </div>
           </motion.div>
