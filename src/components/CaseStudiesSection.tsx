@@ -63,6 +63,7 @@ function BentoGrid({
   return (
     <div
       ref={ref}
+      /* dense: fills gaps left by span-2 cards; DOM order is preserved so screen readers are unaffected */
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-auto [grid-auto-flow:dense]"
     >
       {projects.map((project, i) => {

@@ -276,7 +276,7 @@ export const translations = {
         },
         {
           id: 6,
-          name: "Hospital",
+          name: "Sistem Manajemen Rumah Sakit",
           description:
             "Sistem manajemen rumah sakit komprehensif mencakup pendaftaran pasien, rekam medis elektronik, farmasi, dan billing.",
           tags: ["React", "Spring Boot", "MySQL", "Docker", "HL7"],
@@ -286,7 +286,7 @@ export const translations = {
         },
         {
           id: 7,
-          name: "Logbook",
+          name: "Logbook Digital",
           description:
             "Aplikasi logbook digital untuk pencatatan aktivitas harian, laporan kerja, dan monitoring progress tim secara real-time.",
           tags: ["React Native", "Node.js", "MongoDB", "Firebase"],
@@ -434,7 +434,7 @@ export const translations = {
         },
         {
           label: "UI/UX Design",
-          description: "Human-centred digital experiences",
+          description: "Human-centered digital experiences",
           icon: "🎨",
         },
       ],
@@ -499,7 +499,7 @@ export const translations = {
           icon: "🎨",
           title: "UI/UX & Digital Product Design",
           description:
-            "Human-centred design that converts. We deliver complete design systems, interactive prototypes, and pixel-perfect interfaces that delight users.",
+            "Human-centered design that converts. We deliver complete design systems, interactive prototypes, and pixel-perfect interfaces that delight users.",
           tags: [
             "Figma",
             "Design Systems",
