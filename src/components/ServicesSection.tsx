@@ -2,81 +2,24 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
-const services = [
-  {
-    icon: "⚡",
-    title: "Custom Web Application Development",
-    description:
-      "We craft high-performance, scalable web applications tailored to your business processes. From SPAs to complex multi-tenant platforms, we engineer solutions that grow with you.",
-    tags: ["React", "Next.js", "TypeScript", "Node.js", "PostgreSQL"],
-    accent: "#00D4FF",
-  },
-  {
-    icon: "🏗️",
-    title: "Enterprise ERP Solutions",
-    description:
-      "Streamline operations with custom ERP systems that unify finance, HR, inventory, and CRM into a single, intelligent platform designed for your industry.",
-    tags: ["SAP Integration", "REST APIs", "Microservices", "Docker", "Redis"],
-    accent: "#10B981",
-  },
-  {
-    icon: "🔧",
-    title: "System Architecture & Audit",
-    description:
-      "We assess your existing infrastructure and architect resilient, cloud-native solutions. Our audits identify bottlenecks and deliver actionable roadmaps.",
-    tags: ["AWS", "GCP", "Kubernetes", "CI/CD", "Security Audit"],
-    accent: "#8B5CF6",
-  },
-  {
-    icon: "🎨",
-    title: "UI/UX & Digital Product Design",
-    description:
-      "Human-centred design that converts. We deliver complete design systems, interactive prototypes, and pixel-perfect interfaces that delight users.",
-    tags: ["Figma", "Design Systems", "Prototyping", "A/B Testing", "WCAG"],
-    accent: "#F59E0B",
-  },
-];
-
-const workflowSteps = [
-  {
-    num: "01",
-    icon: "🔍",
-    title: "Discovery",
-    description: "Deep-dive into your goals, constraints, and user needs.",
-  },
-  {
-    num: "02",
-    icon: "📐",
-    title: "Architecture",
-    description: "Design scalable systems and technical blueprints.",
-  },
-  {
-    num: "03",
-    icon: "💻",
-    title: "Development",
-    description: "Agile sprints with weekly demos and continuous delivery.",
-  },
-  {
-    num: "04",
-    icon: "🚀",
-    title: "Deployment",
-    description: "Zero-downtime launches with full monitoring setup.",
-  },
-  {
-    num: "05",
-    icon: "🛡️",
-    title: "Maintenance",
-    description: "24/7 monitoring, updates, and ongoing optimisation.",
-  },
-];
+type ServiceItem = {
+  icon: string;
+  title: string;
+  description: string;
+  tags: readonly string[];
+  accent: string;
+};
 
 function ServiceCard({
   service,
   index,
+  learnMore,
 }: {
-  service: (typeof services)[0];
+  service: ServiceItem;
   index: number;
+  learnMore: string;
 }) {
   return (
     <motion.div
@@ -146,7 +89,7 @@ function ServiceCard({
         className="flex items-center gap-1 text-sm font-semibold group-hover:opacity-100 opacity-0 transition-opacity duration-200"
         style={{ color: service.accent }}
       >
-        Learn More
+        {learnMore}
         <motion.span
           animate={{ x: [0, 4, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
@@ -166,7 +109,22 @@ function ServiceCard({
   );
 }
 
-function WorkflowTimeline() {
+type WorkflowStep = {
+  num: string;
+  icon: string;
+  title: string;
+  description: string;
+};
+
+function WorkflowTimeline({
+  steps,
+  title1,
+  title2,
+}: {
+  steps: readonly WorkflowStep[];
+  title1: string;
+  title2: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -179,8 +137,8 @@ function WorkflowTimeline() {
         className="text-center text-2xl font-bold mb-12"
         style={{ color: "#F1F5F9" }}
       >
-        How We{" "}
-        <span className="gradient-text">Work</span>
+        {title1}{" "}
+        <span className="gradient-text">{title2}</span>
       </motion.h3>
 
       <div className="relative">
@@ -200,7 +158,7 @@ function WorkflowTimeline() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
-          {workflowSteps.map((step, i) => (
+          {steps.map((step, i) => (
             <motion.div
               key={step.num}
               initial={{ opacity: 0, y: 30 }}
@@ -242,6 +200,8 @@ function WorkflowTimeline() {
 }
 
 export default function ServicesSection() {
+  const { t } = useLanguage();
+
   return (
     <section
       id="services"
@@ -267,7 +227,7 @@ export default function ServicesSection() {
               className="text-xs font-semibold uppercase tracking-widest"
               style={{ color: "#00D4FF" }}
             >
-              Solutions & Services
+              {t.services.sectionLabel}
             </span>
             <div
               className="h-px w-8"
@@ -285,8 +245,8 @@ export default function ServicesSection() {
             className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4"
             style={{ color: "#F1F5F9" }}
           >
-            What We{" "}
-            <span className="gradient-text">Build</span>
+            {t.services.heading1}{" "}
+            <span className="gradient-text">{t.services.heading2}</span>
           </motion.h2>
 
           <motion.p
@@ -297,20 +257,28 @@ export default function ServicesSection() {
             className="text-lg max-w-2xl mx-auto"
             style={{ color: "#94A3B8" }}
           >
-            From concept to deployment, we deliver enterprise software that
-            performs at scale and adapts to your evolving business needs.
+            {t.services.subheading}
           </motion.p>
         </div>
 
         {/* Service cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {services.map((service, i) => (
-            <ServiceCard key={service.title} service={service} index={i} />
+          {t.services.items.map((service, i) => (
+            <ServiceCard
+              key={service.title}
+              service={service}
+              index={i}
+              learnMore={t.services.learnMore}
+            />
           ))}
         </div>
 
         {/* How We Work timeline */}
-        <WorkflowTimeline />
+        <WorkflowTimeline
+          steps={t.services.workflowSteps}
+          title1={t.services.workflowTitle1}
+          title2={t.services.workflowTitle2}
+        />
       </div>
     </section>
   );

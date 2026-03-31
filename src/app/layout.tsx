@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export const viewport: Viewport = {
   width: "device-width",

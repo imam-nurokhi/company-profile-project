@@ -1,19 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const footerLinks = {
-  Solutions: [
-    "Web Application Dev",
-    "ERP Implementation",
-    "System Architecture",
-    "UI/UX Design",
-    "IT Audit",
-  ],
-  Company: ["About Us", "Careers", "Team", "Blog", "Press"],
-  Resources: ["Blog", "Whitepapers", "Case Studies", "Documentation", "API"],
-  Legal: ["Privacy Policy", "Terms of Service", "Cookie Policy", "GDPR"],
-};
+import { useLanguage } from "@/context/LanguageContext";
 
 const socialLinks = [
   {
@@ -60,6 +48,10 @@ const socialLinks = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
+  const ft = t.footer;
+
+  const sectionKeys = ["Solutions", "Company", "Resources", "Legal"] as const;
 
   return (
     <footer
@@ -85,8 +77,7 @@ export default function Footer() {
               />
             </a>
             <p className="text-sm leading-relaxed" style={{ color: "#64748B" }}>
-              Architecting scalable digital ecosystems for forward-thinking
-              enterprises since 2019.
+              {ft.tagline}
             </p>
 
             {/* Social icons */}
@@ -118,31 +109,34 @@ export default function Footer() {
 
           {/* Link columns */}
           <div className="lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-8">
-            {Object.entries(footerLinks).map(([heading, links]) => (
-              <div key={heading}>
-                <h4
-                  className="text-xs font-bold uppercase tracking-wider mb-4"
-                  style={{ color: "#00D4FF" }}
-                >
-                  {heading}
-                </h4>
-                <ul className="flex flex-col gap-2.5">
-                  {links.map((link) => (
-                    <li key={link}>
-                      <motion.a
-                        href="#"
-                        className="text-sm transition-colors duration-150"
-                        style={{ color: "#64748B" }}
-                        whileHover={{ color: "#F1F5F9", x: 3 }}
-                        transition={{ duration: 0.15 }}
-                      >
-                        {link}
-                      </motion.a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {sectionKeys.map((key) => {
+              const section = ft.sections[key];
+              return (
+                <div key={key}>
+                  <h4
+                    className="text-xs font-bold uppercase tracking-wider mb-4"
+                    style={{ color: "#00D4FF" }}
+                  >
+                    {section.title}
+                  </h4>
+                  <ul className="flex flex-col gap-2.5">
+                    {section.links.map((link) => (
+                      <li key={link}>
+                        <motion.a
+                          href="#"
+                          className="text-sm transition-colors duration-150"
+                          style={{ color: "#64748B" }}
+                          whileHover={{ color: "#F1F5F9", x: 3 }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          {link}
+                        </motion.a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -158,10 +152,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs" style={{ color: "#475569" }}>
-            © {currentYear} bisadibicarakan.com. All rights reserved.
+            © {currentYear} bisadibicarakan.com. {ft.copyright}
           </p>
           <p className="text-xs flex items-center gap-1" style={{ color: "#475569" }}>
-            Made with{" "}
+            {ft.madeWith}{" "}
             <motion.span
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
@@ -169,7 +163,7 @@ export default function Footer() {
             >
               ♥
             </motion.span>{" "}
-            by the bisadibicarakan.com team
+            {ft.byTeam}
           </p>
         </div>
       </div>
